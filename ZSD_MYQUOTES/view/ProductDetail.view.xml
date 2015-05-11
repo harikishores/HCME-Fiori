@@ -1,0 +1,163 @@
+<!--
+
+
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+
+
+--><core:View xmlns="sap.m" xmlns:me="sap.me" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" controllerName="cus.sd.myquotations.view.ProductDetail">
+
+
+
+	<Page>
+
+		<customHeader>			
+
+			<Bar>
+
+				<contentLeft>
+
+					<Button id="navback" icon="sap-icon://nav-back" press="_navBack" visible="{device&gt;/isPhone}"/>
+
+				</contentLeft>
+
+				<contentMiddle>
+
+					<Label id="pageTitle" text="{i18n&gt;ADDMATTOCART}"/>
+
+				</contentMiddle>
+
+				<contentRight>
+
+					<Button id="cartButton" icon="sap-icon://cart" press="goToCreateQuotation"/>
+
+				</contentRight>
+
+			</Bar>			
+
+		</customHeader>
+
+		<content>
+
+			<ObjectHeader title="{MaterialDetail&gt;/MaterialDescription}" number="{parts:[{path:'MaterialPrice&gt;/Price'},{path:'MaterialPrice&gt;/Currency'}], formatter:'cus.sd.myquotations.util.Formatter.PriceCurrency'}" numberUnit="{path:'MaterialPrice&gt;/Currency', formatter:'cus.sd.myquotations.util.Formatter.formatListPrice'}">
+
+				<attributes>
+
+					<ObjectAttribute text="{MaterialDetail&gt;/MaterialId}"/>					
+
+				</attributes>				
+
+			</ObjectHeader>
+
+
+
+				<layout:VerticalLayout width="100%">				
+
+					<FlexBox id="qtyFlexBlox" justifyContent="End" alignItems="Start">
+
+			        	<HBox alignItems="Center" justifyContent="SpaceAround" width="19rem">
+
+			            	<items>
+
+			                	<Label id="qtyLabel" text="{i18n&gt;QUANTITY}:"/>
+
+								<Input id="qtyInput" value="{path: 'Quantity&gt;/value',  type:'sap.ca.ui.model.type.Number', formatOptions : { style: 'standard'}}" width="5.5rem" change="formChangedInputQuantity"/>
+
+								
+
+								<Select id="unitDDLB" items="{MaterialUoMSet&gt;/results}" selectedKey="{MaterialDetail&gt;/UoM}" change="onSwitchUoM">
+
+									<core:Item text="{MaterialUoMSet&gt;UoMText}" key="{MaterialUoMSet&gt;UoM}"/>
+
+								</Select>
+
+			                </items>
+
+			            </HBox>
+
+			        </FlexBox>	
+
+			       	
+
+					<form:SimpleForm id="matDetail" editable="false">
+
+						<form:content>
+
+							<core:Title text="{i18n&gt;DETAIL_TITLE}" level="H3" emphasized="true"/>
+
+							
+
+							<core:ExtensionPoint name="extQuotationMaterialDetailTop"/>
+
+							
+
+							<Label text="{i18n&gt;MATERIALGROUP}"/>
+
+							<ObjectNumber number="{MaterialDetail&gt;/MaterialGroup}" emphasized="false"/>
+
+
+
+							<Label text="{i18n&gt;DIVISION}"/>
+
+							<ObjectNumber number="{MaterialPrice&gt;/Division}" emphasized="false"/>
+
+
+
+							<Label text="{i18n&gt;GROSSWEIGHT}"/>
+
+							<ObjectNumber id="grossWeightText" numberUnit="{MaterialDetail&gt;/UnitOfWeight}" emphasized="false"/>
+
+							
+
+							<Label text="{i18n&gt;NETWEIGHT}"/>
+
+							<ObjectNumber number="{MaterialDetail&gt;/NetWeight}" numberUnit="{MaterialDetail&gt;/UnitOfWeight}" emphasized="false"/>
+
+						
+
+							<Label text="{i18n&gt;VOLUME}"/>
+
+							<ObjectNumber number="{MaterialDetail&gt;/Volume}" numberUnit="{MaterialDetail&gt;/UnitOfVolume}" emphasized="false"/>
+
+									
+
+							<Label text="{i18n&gt;DIMENSIONS}"/>
+
+							<ObjectNumber number="{MaterialDetail&gt;/Dimensions}" emphasized="false"/>
+
+							
+
+							<core:ExtensionPoint name="extQuotationMaterialDetailBottom"/>
+
+							
+
+						</form:content>
+
+					</form:SimpleForm>				
+
+				</layout:VerticalLayout>			
+
+		</content>
+
+		 <footer>
+
+			<Bar>
+
+				<contentRight>
+
+					<Button text="{i18n&gt;ADDTOCART}" id="TRC_BTN_A2C" tap="onAddToCart" enabled="{buttons&gt;/enableAddToCart}" type="Emphasized"/>
+
+					<Button text="{i18n&gt;CANCEL}" id="TRC_BTN_CANCEL" tap="onCancel"/>
+
+				</contentRight>
+
+			</Bar>
+
+		</footer>
+
+	
+
+	</Page>
+
+</core:View>

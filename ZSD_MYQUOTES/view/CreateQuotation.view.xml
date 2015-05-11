@@ -1,0 +1,355 @@
+<!--
+
+
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+
+
+--><core:View xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:me="sap.me" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:caui="sap.ca.ui" xmlns:mvc="sap.ui.core.mvc" controllerName="cus.sd.myquotations.view.CreateQuotation">
+
+	
+
+	<Page showNavButton="true" navButtonPress="_navBack" title="{path:'myQuotationModel&gt;/QuotationID', formatter:'cus.sd.myquotations.util.Formatter.QuotationSubmitPageTitle'}" class="sapUiFioriObjectPage">
+
+		<content>
+
+
+
+					<form:SimpleForm maxContainerCols="2" editable="true" minWidth="1024" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="1" emptySpanM="1" columnsL="1" columnsM="1">
+
+						<form:content>
+
+							
+
+							<core:Title text="{i18n&gt;CUSTOMER_DETAIL}"/>	
+
+							
+
+							<core:ExtensionPoint name="extEditQuotationCustDetailsTop"/>	
+
+							
+
+							<Label text="{i18n&gt;SOLDTO}"/>
+
+								<Input value="{soldTo&gt;/Name1}" editable="false"/>
+
+							
+
+							<Label text="{i18n&gt;SHIPTO}"/>
+
+								<Input value="{shipTo&gt;/Name1}" editable="false"/>
+
+							
+
+							<Label text="{i18n&gt;STREET}"/>
+
+								<Input id="IDSTREET" value="{shipTo&gt;/Street}"/>
+
+								<Input value="{shipTo&gt;/HouseNumber}">
+
+										<layoutData>
+
+											<layout:GridData span="L2 M2"/>
+
+									</layoutData>
+
+								</Input>
+
+						
+
+						 	<Label required="true" text="{i18n&gt;POSTALCODE}"/> 
+
+						 	
+
+								<Input id="IDPOSTALCODE" value="{shipTo&gt;/PostalCode}" change="formChangedPostalCodeField">
+
+									<layoutData>
+
+											<layout:GridData span="L2 M2"/>
+
+									</layoutData>
+
+								</Input>
+
+								
+
+								<Input id="IDCITY" value="{shipTo&gt;/City}" change="formChangedCityField"/>
+
+							
+
+							<Label required="true" text="{i18n&gt;COUNTRY}"/>
+
+								<Input id="countryInput" value="{shipTo&gt;/CountryDescription}" change="onCountryInput" showValueHelp="true" valueHelpRequest="onCountryValueHelp"/>
+
+							
+
+							<core:ExtensionPoint name="extEditQuotationCustDetailsBottom"/>
+
+							
+
+							<core:Title text="{i18n&gt;QUOTATIONDETAILS}"/>	
+
+							
+
+							<core:ExtensionPoint name="extEditQuotationDetailsTop"/>
+
+							
+
+							<Label text="{i18n&gt;CUSTREF}"/>
+
+								<Input value="{myQuotationModel&gt;/PurchaseOrder}"/> 
+
+								
+
+							<Label required="true" text="{i18n&gt;VALID_FROM_TO}"/>
+
+								<caui:DatePicker id="IDVALIDFROM" value="{path:'myQuotationModel&gt;/ValidFrom' ,  type:'sap.ca.ui.model.type.Date', formatOptions : { style: 'short',  UTC: false }}" change="formChangedValidDate"/>					
+
+								<caui:DatePicker id="IDVALIDTO" value="{path:'myQuotationModel&gt;/ValidTo', type:'sap.ca.ui.model.type.Date', formatOptions : { style: 'short', UTC: false }}" change="formChangedValidDateRequired"/>
+
+						
+
+							<Label required="true" text="{i18n&gt;REQUESTED_DELIVERY_DATE}"/>
+
+							   <caui:DatePicker id="IDREQUESTDELD" value="{path:'myQuotationModel&gt;/RequestedDeliveryDate', type:'sap.ca.ui.model.type.Date', formatOptions : { style: 'short', UTC: false }}" change="formChangedValidDateRequired"/>
+
+							   <Text text=""/>
+
+						
+
+							<Label text="{i18n&gt;REJECTION_STATUS}"/>
+
+								<Input value="{path:'myQuotationModel&gt;/RejectionStatus',  formatter:'cus.sd.myquotations.util.Formatter.StatusLabel'}" editable="false"/>
+
+						
+
+							<Label text="{i18n&gt;REFSTATUS}"/> 
+
+								<Input value="{path:'myQuotationModel&gt;/ReferenceStatus' ,  formatter:'cus.sd.myquotations.util.Formatter.StatusRefLabel'}" editable="false"/>
+
+						
+
+							<Label text="{i18n&gt;OVERALL_DISCOUNT}"/>
+
+								<Input id="IDODISCOUNT" maxLength="5" value="{path:'myQuotationModel&gt;/DiscountPercentage', type:'sap.ca.ui.model.type.Number'}" change="formChangedInputDiscount" editable="false"/>
+
+								<Text text=""/>
+
+							
+
+							<core:ExtensionPoint name="extEditQuotationDetailsBottom"/>
+
+							
+
+							<Label text="{i18n&gt;NETVALUE}"/>
+
+								<Input value="{parts:[{path:'myQuotationModel&gt;/NetValue'},{path:'myQuotationModel&gt;/Currency'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}" editable="false"/> <Text text=""/>
+
+			  				
+
+							<Label text="{i18n&gt;TAX}"/>
+
+								<Input value="{parts:[{path:'myQuotationModel&gt;/TaxAmount'},{path:'myQuotationModel&gt;/Currency'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}" editable="false"/> <Text text=""/>
+
+							
+
+							<Label text="{i18n&gt;TOTAL}"/>
+
+								<Input value="{parts:[{path:'myQuotationModel&gt;/TotalAmount'},{path:'myQuotationModel&gt;/Currency'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}" editable="false"/> <Text text=""/>
+
+							
+
+						</form:content>
+
+					</form:SimpleForm>
+
+		 
+
+
+
+	<Table id="CQID" mode="Delete" delete="onDelete" items="{myQuotationModel&gt;/QuotationItemSet/results}">
+
+
+
+			<headerToolbar>
+
+						<Toolbar>
+
+							<Label text="{path:'myQuotationModel&gt;/QuotationItemSet/results/length', formatter:'cus.sd.myquotations.util.Formatter.NbItems'}"/>
+
+							<ToolbarSpacer/>
+
+							 <Button icon="sap-icon://refresh" text="{path:'i18n&gt;REFRESH', formatter:'cus.sd.myquotations.util.Formatter.MobileText'}" tap="onRefresh"/> 
+
+							  <Button icon="sap-icon://decline" text="{path:'i18n&gt;REJECTALL', formatter:'cus.sd.myquotations.util.Formatter.MobileText'}" tap="onRejectAll"/> 
+
+							 <Button icon="sap-icon://add" text="{path:'i18n&gt;ADD', formatter:'cus.sd.myquotations.util.Formatter.MobileText'}" tap="onAdd"/> 
+
+						</Toolbar>
+
+		    </headerToolbar>
+
+		
+
+				<columns>
+
+					<Column hAlign="Left" vAlign="Middle">
+
+						<header>
+
+							<Text text="{i18n&gt;DESCRIPTION}"/>
+
+						</header>
+
+					</Column>
+
+					<Column minScreenWidth="905px" demandPopin="true" hAlign="Right" vAlign="Middle">
+
+						<header>
+
+							<Text required="true" text="{i18n&gt;QUANTITY}" wrapping="true"/>
+
+						</header>
+
+					</Column>
+
+					<Column minScreenWidth="905px" demandPopin="true" hAlign="Right" vAlign="Middle">
+
+						<header>
+
+							<Text text="{i18n&gt;REQUESTED_DELIVERY_DATE_TABLE}" wrapping="true"/>
+
+						</header>
+
+					</Column>
+
+					<Column minScreenWidth="905px" demandPopin="true" hAlign="Right" vAlign="Middle">
+
+						<header>
+
+					 	<Text text="{i18n&gt;DISCOUNT_TITLE}" wrapping="true"/> 
+
+						</header>
+
+					</Column>
+
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right" vAlign="Middle"> 
+
+						<header>
+
+							<Text text="{i18n&gt;NET_VALUE}" wrapping="true"/>
+
+						</header>
+
+					</Column>
+
+					
+
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right" vAlign="Middle">
+
+						<header>
+
+							<Text text="{i18n&gt;PROCESSTATUS}" wrapping="true"/>
+
+						</header>
+
+					</Column>
+
+					
+
+				</columns>
+
+				 
+
+				<ColumnListItem type="Navigation" press="onItemPress">
+
+					<cells>
+
+						<layout:HorizontalLayout>
+
+							<FlexBox direction="Column" alignItems="Start">	
+
+							<Label text="{myQuotationModel&gt;MaterialNumber}" design="Bold"/>
+
+							<Label text="{myQuotationModel&gt;ItemDescription}"/>
+
+							</FlexBox>
+
+						</layout:HorizontalLayout>
+
+					
+
+					 <layout:HorizontalLayout>
+
+					    <FlexBox justifyContent="SpaceBetween" width="7.8rem" alignItems="Center">	 
+
+							<Input value="{path: 'myQuotationModel&gt;OrderQuantity',  type:'sap.ca.ui.model.type.Number', formatOptions : { style: 'standard'}}" width="5.5rem" change="formChangedInputQuantity" enabled="{parts:[{path:'myQuotationModel&gt;RejectionStatus'},{path:'myQuotationModel&gt;ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.visiblityForRejection'}"/>
+
+							<Text text="{myQuotationModel&gt;SalesUnit}" wrapping="true"/>
+
+						</FlexBox>
+
+					</layout:HorizontalLayout>
+
+					
+
+					 <caui:DatePicker width="7.5rem" value="{path:'myQuotationModel&gt;RequestedDeliveryDate' , type:'sap.ca.ui.model.type.Date', formatOptions : { style: 'short',  UTC: false }}" change="formChangedValidDate" enabled="{parts:[{path:'myQuotationModel&gt;RejectionStatus'},{path:'myQuotationModel&gt;ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.visiblityForRejection'}"/>	
+
+				
+
+					 <layout:HorizontalLayout>
+
+					    <FlexBox justifyContent="SpaceBetween" width="5.7rem" alignItems="Center">	 
+
+					    <Input width="4.5rem" maxLength="5" value="{path: 'myQuotationModel&gt;Discount',  type:'sap.ca.ui.model.type.Number'}" change="formChangedInputDiscount" enabled="{parts:[{path:'myQuotationModel&gt;RejectionStatus'},{path:'myQuotationModel&gt;ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.visiblityForRejection'}" editable="false"/>	
+
+					    <Text text="{myQuotationModel&gt;/DiscountUnit}" wrapping="true"/>
+
+					</FlexBox>  
+
+					</layout:HorizontalLayout>
+
+				
+
+					<Text text="{parts:[{path:'myQuotationModel&gt;NetAmount'},{path:'myQuotationModel&gt;ListPriceUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}"/>
+
+						
+
+					<ObjectStatus text="{parts:[{path:'myQuotationModel&gt;RejectionReason'},{path:'myQuotationModel&gt;RejectionStatus'},{path:'myQuotationModel&gt;ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.rejectionStatus'}"/>		
+
+				 </cells>
+
+			 </ColumnListItem>
+
+			
+
+			</Table>
+
+			
+
+	</content>
+
+	
+
+		<footer>
+
+			<Bar>
+
+				<contentRight>
+
+					<Button text="{i18n&gt;SAVEQUOTE}" id="TRC_BTN_SAVE_CREATE" tap="onSave" type="Emphasized"/>
+
+					<Button text="{i18n&gt;CANCEL}" id="TRC_BTN_CANCEL" tap="onCancel"/>
+
+				</contentRight>
+
+			</Bar>
+
+		</footer>
+
+	
+
+	</Page>
+
+</core:View>

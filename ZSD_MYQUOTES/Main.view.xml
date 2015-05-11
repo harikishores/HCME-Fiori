@@ -1,0 +1,13 @@
+<!--
+
+
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+
+
+--><core:View xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="cus.sd.myquotations.Main" displayBlock="true" height="100%">
+
+	<NavContainer id="fioriContent"/>
+
+</core:View>
