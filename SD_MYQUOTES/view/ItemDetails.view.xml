@@ -1,0 +1,140 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View controllerName="cus.sd.myquotations.view.ItemDetails"
+	 xmlns:core="sap.ui.core"  xmlns="sap.m" xmlns:me="sap.me" 
+	xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:caui="sap.ca.ui"
+	xmlns:mvc="sap.ui.core.mvc" >
+	
+	<Page showNavButton="true" navButtonPress="_navBack" title="{i18n>ITEM_DETAILS}" class="sapUiFioriObjectPage">
+		<content>
+				<!-- EDIT MODE -->
+				<layout:VerticalLayout width="100%" visible="{path:'myItem>/ItemDescription' ,formatter:'.formEditable'}">
+					<form:SimpleForm  maxContainerCols="2" editable="true" minWidth="1024" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1" >
+							<core:Title text = "{path:'myItem>/QuotationID' ,formatter:'cus.sd.myquotations.util.Formatter.formatQuotation'}"/>				
+					
+						<form:content >
+							
+							<core:ExtensionPoint name="extEditQuotationItemDetailsTop"/>	
+							
+							<Label text="{i18n>MATERIALNUMBER}"/>
+								<Input value="{myItem>/MaterialNumber}" editable="false" />
+								
+							<Label text="{i18n>DESCRIPTION}"/>
+								<Input value="{myItem>/ItemDescription}" editable="false" />
+							
+							<Label text="{i18n>QUANTITY}"/>
+								<Input id="ORDERIDQTY" value="{path: 'myItem>/OrderQuantity',  type:'sap.ca.ui.model.type.Number', formatOptions : { style: 'standard'}}"   change="formChangedInputQuantity" 
+								  enabled="{parts:[{path:'myItem>/RejectionStatus'},{path:'myItem>/ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.visiblityForRejection'}"  >
+									<layoutData>
+											<layout:GridData span="L4 M4"/>
+									</layoutData>
+								</Input>
+								
+								<Input value="{myItem>/SalesUnit}"  editable="false"/>
+									
+							
+							<Label text="{i18n>REQUESTED_DELIVERY_DATE_TABLE}"/>
+							    <caui:DatePicker id="REDELDATEITEM" value="{path:'myItem>/RequestedDeliveryDate' , type:'sap.ca.ui.model.type.Date', formatOptions : { style: 'short',  UTC: false }}" change="formChangedValidDate"
+							      enabled="{parts:[{path:'myItem>/RejectionStatus'},{path:'myItem>/ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.visiblityForRejection'}"  > 
+							    </caui:DatePicker>
+							    <Input value=""  editable="false" >
+							    <layoutData>
+											<layout:GridData span="L1 M1"/>
+									</layoutData>
+							    </Input>	
+								
+						 	<Label text="{i18n>GROSS_PRICE}"/> 
+								<Input value="{parts:[{path:'myItem>/ListPrice'},{path:'myItem>/ListPriceUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}" editable="false"/>
+							
+							<Label  required="true" text="{i18n>DISCOUNT_TITLE}"/>
+								<Input id="DISCOUNTITEMD" maxLength="5" value="{path: 'myItem>/Discount',  type:'sap.ca.ui.model.type.Number'}"  change="formChangedInputDiscount" 
+								  enabled="{parts:[{path:'myItem>/RejectionStatus'},{path:'myItem>/ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.visiblityForRejection'}" >
+								<layoutData>
+											<layout:GridData span="L4 M4"/>
+									</layoutData>
+								</Input>
+								<Input value= "{myItem>/DiscountUnit}" editable="false"/>
+								
+								
+							<Label text = "{i18n>NET_VALUE}" />
+							   <Input value="{parts:[{path:'myItem>/NetAmount'},{path:'myItem>/ListPriceUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}" editable="false"/>
+							
+							<Label text="{i18n>REFSTATUS}"/> 
+								<Input value= "{myItem>/ReferenceStatusDescription}" editable="false"/>	
+							
+							<Label text="{i18n>REASONREJECTION}"/>
+							   <Select  items="{ path: 'rejectionReason>/results' }" selectedKey="{myItem>/RejectionReason}"   
+							    enabled="{parts:[{path:'myItem>/RejectionStatus'},{path:'myItem>/ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.visiblityForRejectionDLL'}"  >	
+                               	<core:Item text="{rejectionReason>Value}" key="{rejectionReason>Key}" />
+                               </Select>
+                               
+                                <Input value=""  editable="false" >
+							    <layoutData>
+											<layout:GridData span="L1 M1"/>
+									</layoutData>
+							    </Input>	
+							
+							   <core:ExtensionPoint name="extEditQuotationItemDetailsBottom"/>
+							
+						</form:content>
+					</form:SimpleForm>
+				</layout:VerticalLayout>
+			
+			    <!-- DISPLAY MODE -->
+				<layout:VerticalLayout width="100%" visible="{path:'myItem>/ItemDescription' ,formatter:'.formDisplay'}">
+					<form:SimpleForm >
+							<core:Title text = "{path:'myItem>/QuotationID' ,formatter:'cus.sd.myquotations.util.Formatter.formatQuotation'}"/>				
+					
+						<form:content >
+							
+							<core:ExtensionPoint name="extDisplayQuotationItemDetailsTop"/>	
+							
+							<Label text="{i18n>MATERIALNUMBER}"/>
+								<Text text="{myItem>/MaterialNumber}"  />
+								
+							<Label text="{i18n>DESCRIPTION}"/>
+								<Text text="{myItem>/ItemDescription}"  />
+								
+							<Label text="{i18n>QUANTITY}"/>
+								<Text text="{parts:[{path:'myItem>/OrderQuantity'},{path:'myItem>/SalesUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatQuantity'}" />
+							
+							<Label text="{i18n>REQUESTED_DELIVERY_DATE_TABLE}"/>
+							    <Text text="{path:'myItem>/RequestedDeliveryDate' , type:'sap.ca.ui.model.type.Date', formatOptions : { style: 'short',  UTC: false }}" />
+								
+						 	<Label text="{i18n>GROSS_PRICE}"/> 
+								<Text text="{parts:[{path:'myItem>/ListPrice'},{path:'myItem>/ListPriceUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}" editable="false"/>
+							
+							<Label text="{i18n>DISCOUNT_TITLE}"/>
+							    <Text text="{parts:[{path:'myItem>/Discount'},{path:'myItem>/DiscountUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatQuantity'}" />
+
+							<Label text = "{i18n>NET_VALUE}" />
+							   <Text text="{parts:[{path:'myItem>/NetAmount'},{path:'myItem>/ListPriceUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}" />
+							
+							<Label text="{i18n>REFSTATUS}"/> 
+								<Text text= "{myItem>/ReferenceStatusDescription}"/>
+							
+							<Label text="{i18n>REASONREJECTION}"/>
+								<Text text= "{myItem>/RejectionReasonDescription}"/>
+							
+							   <core:ExtensionPoint name="extDisplayQuotationItemDetailsBottom"/>
+							
+						</form:content>
+					</form:SimpleForm>
+				</layout:VerticalLayout>
+			
+	</content>
+	
+		<footer>
+			<Bar>
+				<contentRight>
+					<Button text="{i18n>DONE}" id="TRC_BTN_DONE" tap="onDone"  type="Emphasized" visible="{path:'myItem>/ItemDescription' ,formatter:'.formEditable'}" />
+					<Button text="{i18n>CANCEL}" id="TRC_BTN_CANCEL" tap="onCancel"/>
+				</contentRight>
+			</Bar>
+		</footer>
+	
+	</Page>
+</core:View>

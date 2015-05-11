@@ -1,0 +1,188 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View xmlns="sap.m"
+		   xmlns:caui="sap.ca.ui"
+           xmlns:core="sap.ui.core"
+           xmlns:form="sap.ui.layout.form"
+           xmlns:layout="sap.ui.layout"
+		  controllerName="cus.sd.myquotations.view.S3">
+	<Page title="{i18n>DETAIL_TITLE}" showNavButton="{device>/isPhone}" navButtonPress="_navBack">
+		<content>
+			<ObjectHeader id="headerInfo" title="{soldTo>/Name1}"
+						number="{parts:[{path:'quotation>/NetValue'},{path:'quotation>/Currency'}], formatter:'cus.sd.myquotations.util.Formatter.PriceCurrency'}"
+						numberUnit="{path:'quotation>/Currency', formatter:'cus.sd.myquotations.util.Formatter.formatNetValue'}">
+				
+				<attributes>					
+					<ObjectAttribute text="{path:'quotation>/ValidTo' ,formatter:'cus.sd.myquotations.util.Formatter.formatExpiryDate'}" active="false"/>
+					<ObjectAttribute text="{parts:[{path:'quotation>/SalesDocumentTypeDesc'},{path:'quotation>/QuotationID'}], formatter:'cus.sd.myquotations.util.Formatter.formatQuotationID'}"/>
+				</attributes>
+				<statuses>
+					<ObjectStatus text="{parts:[{path:'quotation>/Discount'},{path:'quotation>/DiscountUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatDiscount'}"/>
+					<ObjectStatus text="{parts:[{path:'quotation>/ProcessingStatusDesc'},{path:'quotation>/ProcessingStatus'}], formatter:'cus.sd.myquotations.util.Formatter.formatStatus'}" 
+								  state="{parts:[{path:'quotation>/ValidTo'},{path:'quotation>/ProcessingStatus'}], formatter:'cus.sd.myquotations.util.Formatter.formatExpiryState'}"/>
+					<ObjectStatus text="{parts:[{path:'quotation>/ValidTo'},{path:'quotation>/ProcessingStatus'}] ,formatter:'cus.sd.myquotations.util.Formatter.formatExpiry'}"
+								  state="{parts:[{path:'quotation>/ValidTo'},{path:'quotation>/ProcessingStatus'}], formatter:'cus.sd.myquotations.util.Formatter.formatExpiryState'}"/>
+				</statuses>
+			</ObjectHeader>
+
+			<IconTabBar selectedKey="key1"> 
+				<items> 
+					<IconTabFilter  key="key1" icon="sap-icon://hint" text="{i18n>ICON_INFO}"> 
+						<content> 
+							<form:SimpleForm>
+								<form:content>
+									<core:ExtensionPoint name="extQuotationDetailsInfoTop"/> 
+									<Label text="{i18n>SHIPTO}"/>
+									<Text text="{shipTo>/Name1}"/>
+									<Label text="{i18n>SHIPTOADDRESS}"/>
+									<Text text="{parts:[{path:'shipTo>/HouseNumber'},{path:'shipTo>/Street'}], formatter:'cus.sd.myquotations.util.Formatter.formatHouseNumberStreet'}"/>
+									<Label text=""/>
+									<Text text="{parts:[{path:'shipTo>/PostalCode'}, {path:'shipTo>/City'}, {path:'shipTo>/Country'}], formatter:'cus.sd.myquotations.util.Formatter.formatCityCountry'}"/>
+									
+ 									<Label text="{i18n>CUSTREF}"/>
+									<Text text="{quotation>/PurchaseOrder}"/>
+								
+									<Label text="{i18n>REQUESTED_DELIVERY_DATE}"/>
+									<Text text="{path:'quotation>/RequestedDeliveryDate', formatter:'cus.sd.myquotations.util.Formatter.Date'}"/>
+									<Label text="{i18n>VALID_FROM_TO}"/>
+									<Text text="{parts:[{path:'quotation>/ValidFrom'},{path:'quotation>/ValidTo'}], formatter:'cus.sd.myquotations.util.Formatter.formatFromToDate'}"/>
+									
+									<Label text="{i18n>CREATED_ON}"/>
+									<Text text="{path:'quotation>/CreatedOn', formatter:'cus.sd.myquotations.util.Formatter.Date'}"/>
+									
+									
+									<Label text="{i18n>PAYMENT_TERMS}"/>
+									<Text text="{quotation>/TermsOfPaymentDescription}"/>
+									
+									<Label text=""/>
+									<Text text=""/>
+									
+									<Label text="{i18n>REJECTION_STATUS}"/>
+									<ObjectStatus text="{path:'quotation>/RejectionStatus',  formatter:'cus.sd.myquotations.util.Formatter.StatusLabel'}"    state ="{path:'quotation>/RejectionStatus',  formatter:'cus.sd.myquotations.util.Formatter.StatusRejColor'}"  />
+									
+									<Label text="{i18n>REFSTATUS}"/> 
+										<Text text="{path:'quotation>/ReferenceStatus' ,  formatter:'cus.sd.myquotations.util.Formatter.StatusRefLabel'}"/>
+									
+									
+									<core:ExtensionPoint name="extQuotationDetailsInfoBottom"/>
+								</form:content>
+						   </form:SimpleForm>
+						</content> 
+					</IconTabFilter> 
+
+					<IconTabFilter key="key2" icon="sap-icon://activity-items" text="{i18n>ICON_NOTES}" count="{quotation>/NoteSet/results/length}"> 
+						<content> 
+							<caui:Notes id="NotesUI" inset="true" textMaxLength="1000" addNote="_handleAddNote">
+								<caui:ExpansibleFeedListItem sender="{quotation>CreatedBy}"
+									text="{quotation>Content}" timestamp="{path:'quotation>ChangedOnDate', formatter:'cus.sd.myquotations.util.Formatter.Date'}"
+									icon="sap-icon://person-placeholder" info="{i18n>ICON_INFO}" maxLines="3"/>
+							</caui:Notes>
+						</content> 
+					</IconTabFilter>
+					
+					<IconTabFilter key="key3" icon="sap-icon://attachment" text="{i18n>ICON_ATTACHMENTS}" count="{quotation>/AttachmentSet/results/length}"> 
+						<content> 
+							<VBox>
+								<items>
+									<caui:FileUpload
+									    id="AttachmentsUI"
+									    items="/Attachments"
+									    fileName="name"
+									    size="size"
+									    url="url"
+									    uploadedDate="uploadedDate"
+									    contributor="contributor"
+									    fileExtension="fileExtension"
+									    editMode="false"
+									    uploadEnabled="true"
+									    useMultipart="false"
+									    xsrfToken=""
+									    acceptRequestHeader="application/json"
+									    deleteFile="onDeleteFile"
+									 
+									    uploadFile="onUploadFile"
+								        fileUploadFailed="onFileUploadFailed"
+								        beforeUploadFile="onBeforeUploadFile"
+								      
+										useEditControls="true"
+								        renameEnabled="false"
+								        
+								        /> 
+								        
+								</items>
+							</VBox>
+						</content> 
+					</IconTabFilter>
+
+					<IconTabFilter id="contacttab" key="key4" icon="sap-icon://collaborate" text="{i18n>ICON_CONTACTS}" count="{contactPeople>/length}">
+						<content> 
+							<List id="ContactsUI" items="{contactPeople>/}">
+								<StandardListItem type="Active" title="{contactPeople>name}"
+									description="{contactPeople>department}" 
+									info="{contactPeople>PartnerNumber}"
+									icon="sap-icon://person-placeholder" 
+									press="onContactLaunch"/>	
+							</List>
+						</content> 
+					</IconTabFilter>
+					<core:ExtensionPoint name="extQuotationDetailsTabs"/>
+				</items> 
+			</IconTabBar>	 
+
+			<Table id="listItems" headerText="{path:'quotation>/QuotationItemSet/results/length', formatter:'cus.sd.myquotations.util.Formatter.NbItems'}">
+				<columns>
+					<Column hAlign="Left" vAlign="Middle">
+						<header>
+							<Text text="{i18n>DESCRIPTION}"/>
+						</header>
+					</Column>
+					<Column  minScreenWidth="Tablet" demandPopin="true" hAlign="Right">
+						<header>
+							<Text text="{i18n>QUANTITY}" wrapping="true"/>
+						</header>
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right">
+						<header>
+							<Text text="{i18n>REQUESTED_DELIVERY_DATE}" wrapping="true"/>
+						</header>
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right">
+						<header>
+							<Text text="{i18n>DISCOUNT_TITLE}" wrapping="true"/>
+						</header>
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right">
+						<header>
+							<Text text="{i18n>NET_VALUE}" wrapping="true"/>
+						</header>
+					</Column>
+					<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right">
+						<header>
+							<Text text="{i18n>PROCESSTATUS}" wrapping="true"/>
+						</header>
+					</Column>
+				</columns>
+				
+				<ColumnListItem type="Navigation" press="onItemPress">
+					<cells>
+						<ObjectIdentifier title="{quotation>MaterialNumber}" text="{quotation>ItemDescription}" />
+						
+						<Text text="{parts:[{path:'quotation>OrderQuantity'},{path:'quotation>SalesUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatQuantity'}"/>
+									
+						<Text text="{path:'quotation>RequestedDeliveryDate', formatter:'cus.sd.myquotations.util.Formatter.Date'}" />
+						
+						<Text text="{parts:[{path:'quotation>DiscountPercentage'},{path:'quotation>DiscountUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatItemDiscount'}"/>
+					
+ 						<Text text="{parts:[{path:'quotation>NetAmount'},{path:'quotation>ListPriceUnit'}], formatter:'cus.sd.myquotations.util.Formatter.formatUnitCurrency'}"/>
+ 						
+ 						<ObjectStatus text="{parts:[{path:'quotation>RejectionReason'},{path:'quotation>RejectionStatus'},{path:'quotation>ReferenceStatus'}], formatter:'cus.sd.myquotations.util.Formatter.rejectionStatus'}" />		
+				
+					</cells>
+				</ColumnListItem>
+			</Table>
+		</content>
+	</Page>
+</core:View>

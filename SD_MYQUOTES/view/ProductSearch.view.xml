@@ -1,0 +1,21 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View controllerName="cus.sd.myquotations.view.ProductSearch"
+	xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Page id="page">
+		<content>
+			<List id="list" mode="{device>/listMode}" select="_handleSelect"
+                   growing="true" growingThreshold="50" growingScrollToLoad="true" noDataText="{i18n>NODATA}">
+				<ObjectListItem id="PROD_LIST_ITEM" type="{device>/listItemType}" press="_handleItemPress" 
+					title="{path:'MaterialDesc', formatter:'cus.sd.myquotations.util.Formatter.formatMatDesc'}">
+					<attributes>
+						<ObjectAttribute id="productId" text="{MaterialId}"></ObjectAttribute>
+					</attributes>
+				</ObjectListItem>
+			</List>
+		</content>
+	</Page>
+</core:View>

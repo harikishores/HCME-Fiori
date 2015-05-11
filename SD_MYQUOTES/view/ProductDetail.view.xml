@@ -1,0 +1,89 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View controllerName="cus.sd.myquotations.view.ProductDetail"
+	xmlns="sap.m" xmlns:me="sap.me" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core">
+
+	<Page>
+		<customHeader>			
+			<Bar>
+				<contentLeft>
+					<Button id="navback" icon="sap-icon://nav-back" press="_navBack" visible="{device>/isPhone}"/>
+				</contentLeft>
+				<contentMiddle>
+					<Label id="pageTitle" text="{i18n>ADDMATTOCART}"/>
+				</contentMiddle>
+				<contentRight>
+					<Button id="cartButton" icon="sap-icon://cart" press="goToCreateQuotation" />
+				</contentRight>
+			</Bar>			
+		</customHeader>
+		<content>
+			<ObjectHeader title="{MaterialDetail>/MaterialDescription}" 
+						number="{parts:[{path:'MaterialPrice>/Price'},{path:'MaterialPrice>/Currency'}], formatter:'cus.sd.myquotations.util.Formatter.PriceCurrency'}" 
+						numberUnit="{path:'MaterialPrice>/Currency', formatter:'cus.sd.myquotations.util.Formatter.formatListPrice'}">
+				<attributes>
+					<ObjectAttribute text="{MaterialDetail>/MaterialId}"/>					
+				</attributes>				
+			</ObjectHeader>
+
+				<layout:VerticalLayout width="100%">				
+					<FlexBox id="qtyFlexBlox" justifyContent="End" alignItems="Start">
+			        	<HBox alignItems="Center" justifyContent="SpaceAround" width="19rem">
+			            	<items>
+			                	<Label id="qtyLabel" text="{i18n>QUANTITY}:"></Label>
+								<Input id="qtyInput" value="{path: 'Quantity>/value',  type:'sap.ca.ui.model.type.Number', formatOptions : { style: 'standard'}}" 
+									width="5.5rem"  change="formChangedInputQuantity" />
+								
+								<Select id="unitDDLB" items="{MaterialUoMSet>/results}"
+									selectedKey="{MaterialDetail>/UoM}" change="onSwitchUoM">
+									<core:Item text="{MaterialUoMSet>UoMText}" key="{MaterialUoMSet>UoM}"></core:Item>
+								</Select>
+			                </items>
+			            </HBox>
+			        </FlexBox>	
+			       	
+					<form:SimpleForm id="matDetail" editable="false">
+						<form:content>
+							<core:Title text="{i18n>DETAIL_TITLE}" level="H3" emphasized="true" />
+							
+							<core:ExtensionPoint name="extQuotationMaterialDetailTop"/>
+							
+							<Label text="{i18n>MATERIALGROUP}"/>
+							<ObjectNumber number="{MaterialDetail>/MaterialGroup}" emphasized="false"/>
+
+							<Label text="{i18n>DIVISION}"/>
+							<ObjectNumber number="{MaterialPrice>/Division}" emphasized="false"/>
+
+							<Label text="{i18n>GROSSWEIGHT}"/>
+							<ObjectNumber id="grossWeightText" numberUnit="{MaterialDetail>/UnitOfWeight}" emphasized="false" />
+							
+							<Label text="{i18n>NETWEIGHT}"/>
+							<ObjectNumber number="{MaterialDetail>/NetWeight}" numberUnit="{MaterialDetail>/UnitOfWeight}" emphasized="false"/>
+						
+							<Label text="{i18n>VOLUME}"></Label>
+							<ObjectNumber number="{MaterialDetail>/Volume}" numberUnit="{MaterialDetail>/UnitOfVolume}" emphasized="false"/>
+									
+							<Label text="{i18n>DIMENSIONS}"/>
+							<ObjectNumber number="{MaterialDetail>/Dimensions}" emphasized="false"/>
+							
+							<core:ExtensionPoint name="extQuotationMaterialDetailBottom"/>
+							
+						</form:content>
+					</form:SimpleForm>				
+				</layout:VerticalLayout>			
+		</content>
+		 <footer>
+			<Bar>
+				<contentRight>
+					<Button text="{i18n>ADDTOCART}" id="TRC_BTN_A2C" tap="onAddToCart" enabled="{buttons>/enableAddToCart}" type="Emphasized"></Button>
+					<Button text="{i18n>CANCEL}" id="TRC_BTN_CANCEL" tap="onCancel" />
+				</contentRight>
+			</Bar>
+		</footer>
+	
+	</Page>
+</core:View>

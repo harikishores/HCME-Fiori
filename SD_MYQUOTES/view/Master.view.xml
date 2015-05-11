@@ -1,0 +1,35 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View xmlns="sap.m" xmlns:core="sap.ui.core" controllerName="cus.sd.myquotations.view.Master">
+	<Page id="page">
+		<content>
+			<List id="list" mode="{device>/listMode}" select="_handleSelect"
+				  growing="true" growingThreshold="50" growingScrollToLoad="true" noDataText="{i18n>NODATA}">
+				<ObjectListItem id="MAIN_LIST_ITEM" type="{device>/listItemType}" press="_handleItemPress" title="{SoldToPartyDescription}"
+                    number="{parts:[{path:'NetValue'},{path:'Currency'}], formatter:'cus.sd.myquotations.util.Formatter.PriceCurrency'}"
+                    numberUnit="{path:'Currency', formatter:'cus.sd.myquotations.util.Formatter.formatNetValue'}">
+ 					<attributes>
+						<ObjectAttribute id="expirationDate" text="{path:'ValidTo' ,formatter:'cus.sd.myquotations.util.Formatter.formatExpiryDate'}" active="false"/>
+						<ObjectAttribute text="{parts:[{path:'SalesDocumentTypeDesc'},{path:'QuotationID'}], formatter:'cus.sd.myquotations.util.Formatter.formatQuotationID'}"/>
+					</attributes> 
+					<firstStatus>
+						<ObjectStatus text="{parts:[{path:'ProcessingStatusDesc'},{path:'ProcessingStatus'}], formatter:'cus.sd.myquotations.util.Formatter.formatStatus'}"
+									  state="{parts:[{path:'ValidTo'},{path:'ProcessingStatus'}], formatter:'cus.sd.myquotations.util.Formatter.formatExpiryState'}"/>
+					</firstStatus>
+				</ObjectListItem>  
+				<infoToolbar>
+					<Toolbar visible="false" id="infoBarToolbar">
+						<content>
+							<Label id="infoBarFilter"/>
+							<ToolbarSpacer/>
+							<core:Icon id="closeFilterIcon" src="sap-icon://sys-cancel" press="clearFilters"/> 
+						</content>
+					</Toolbar>
+				</infoToolbar> 
+			</List>
+		</content>		
+	</Page>
+</core:View>
